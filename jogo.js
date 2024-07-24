@@ -2,13 +2,17 @@ const prompt = require("prompt-sync")();
 
 const jogos = [];
 
-const criar = () => {
+const modelo = () => {
   const nome = prompt("Nome do jogo: ");
   const ano_lancamento = prompt("Ano de lançamento: ");
   const duracao = prompt("Duração média em horas: ");
   const preco = prompt("Preço: ");
   const estudio = prompt("Qual o estudio do jogo? ");
-  const sequencia = prompt("Qual é a sequência do jogo? ");
+  let sequencia = -1;
+  if (listar()) {
+    sequencia =
+      prompt("Qual é a sequência do jogo? Digite 0 se não houver") - 1;
+  }
 
   if (
     nome != "" &&
@@ -17,29 +21,37 @@ const criar = () => {
     duracao > 0 &&
     preco == 0 &&
     estudio != "" &&
-    ((sequencia > 0 && sequencia < jogos.length) || jogos.length == 0)
+    ((sequencia >= -1 && sequencia < jogos.length) || jogos.length == 0)
   ) {
-    jogos.push({
+    return {
       nome,
       ano_lancamento,
       duracao,
       preco,
       estudio,
       sequencia,
-    });
-
-    console.log("Jogo cadastrado com sucesso");
+    };
   } else {
     console.log("Dados inválidos");
   }
 };
 
+const criar = () => {
+  const jogo = modelo();
+
+  if (jogo != undefined) {
+    jogos.push(jogo);
+    console.log("Jogo cadastrado com sucesso");
+  }
+};
+
 const listar = () => {
-    if(jogos.length == 0) {
-        console.log("Nenhum jogo encontrado")
-    } else {
-        jogos.forEach((jogo, indice) => {
-            console.log(`
+  if (jogos.length == 0) {
+    console.log("Nenhum jogo encontrado");
+    return false;
+  } else {
+    jogos.forEach((jogo, indice) => {
+      console.log(`
                 ${indice + 1}. 
                 Nome: ${jogo.nome}
                 Ano de Lancamento: ${jogo.ano_lancamento}
@@ -47,7 +59,27 @@ const listar = () => {
                 Preço: ${jogo.preco}
                 Estudio: ${jogo.estudio}
                 Sequência: ${jogo.sequencia}
-                `)
-        })
-    }
-}
+                `);
+    });
+
+    return true;
+  }
+};
+
+const atualizar = () => {
+  if (!listar()) {
+    return;
+  }
+
+  const indice = prompt("Qual o indice que deseja atualizar? ") - 1;
+
+  const jogo = modelo();
+
+  if (jogo != undefined && indice >= 0 && indice < jogos.length) {
+    jogos[indice] = jogo;
+
+    console.log("Jogo atualizado com sucesso");
+  } else {
+    console.log("Falha na atualização");
+  }
+};
