@@ -1,5 +1,5 @@
 const prompt = require("prompt-sync")();
-const { criar, atualizar, listar, remover } = require("./jogo.js");
+const { criar, atualizar, listar, remover } = require("./estudio.js");
 
 while (true) {
   console.log(`
